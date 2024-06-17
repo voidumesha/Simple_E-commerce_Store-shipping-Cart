@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+#products {
+    display: flex;
+    flex-wrap: wrap;
+}
+.product {
+    border: 1px solid #ddd;
+    margin: 10px;
+    padding: 10px;
+    width: 200px;
+}
+#ourPro{
+    text-align: center;
+    font-size: 50px;
+}
+#cart-icon{
+    align-items: end;
+}
+nav ul {
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+    padding: 0;
+    background-color: darkorchid;
+    height: 40px;
+    margin-block-start: auto;
+}
