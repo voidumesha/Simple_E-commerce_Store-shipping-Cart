@@ -1,30 +1,143 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background-color: antiquewhite;
 }
 #products {
-    display: flex;
-    flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
 }
 .product {
-    border: 1px solid #ddd;
-    margin: 10px;
-    padding: 10px;
-    width: 200px;
+  border: 1px solid #ddd;
+  margin: 10px;
+  padding: 10px;
+  width: 200px;
 }
-#ourPro{
-    text-align: center;
-    font-size: 50px;
+#ourPro {
+  text-align: center;
+  font-size: 50px;
 }
-#cart-icon{
-    align-items: end;
-}
+
 nav ul {
-    display: flex;
-    justify-content: space-around;
-    list-style-type: none;
-    padding: 0;
-    background-color: darkorchid;
-    height: 40px;
-    margin-block-start: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  border-radius: 20px;
+  background-color: darkorchid;
+  height: 50px;
+}
+nav {
+  position: relative;
+  width: 100%;
+  margin-top: -20px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+}
+#cart-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border: none;
+  filter: invert(1);
+}
+
+nav ul li {
+  margin: 0 5px;
+}
+
+
+
+
+
+
+
+
+@media screen and (max-width: 768px) {
+  nav ul {
+    flex-direction: row;
+    align-items: center;
+
+    height: auto;
+  }
+
+  #cart-icon {
+    height: 10x;
+    width: 10px;
+  }
+  nav ul li {
+    margin: 0 10px;
+  }
+  #ourPro {
+    font-size: 30px;
+  }
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.product {
+  flex: 1 0 21%;
+  margin: 1%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.product img {
+  width: 30%;
+  height: 30%;
+}
+
+.price {
+  font-size: 1.2em;
+  color: #333;
+}
+
+.add-to-cart {
+  background-color: #f8a20f;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 480px) {
+  #cart-icon {
+    height: 10px;
+    width: 10px;
+  }
+}
+@media screen and (max-width: 1366px) {
+  #cart-icon {
+    height: 30px;
+    width: 30px;
+    top: 10px;
+    margin-right: 15px;
+  }
+  nav ul {
+    justify-content: center;
+  }
+  nav ul li {
+    margin: 0 12px;
+  }
+}
+@media screen and (max-width: 915px) {
+  #cart-icon {
+    height: 17px;
+    width: 17px;
+  }
+  nav ul li {
+    font-size: 10px;
+  }
+  nav ul {
+    height: 30px;
+  }
 }
