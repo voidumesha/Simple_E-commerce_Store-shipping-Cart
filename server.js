@@ -1,57 +1,55 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
-const port = 3000;
-
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
+app.use(express.json());
 app.use(express.static('public'));
 
+const PORT = process.env.PORT || 8000;
+const MONGOURL = process.env.MONGO_URI;
 
-mongoose.connect('mongodb+srv://ecommerce:1234@cluster0.wwujver.mongodb.net/ecommerce?retryWrites=true&w=majority')
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('Failed to connect to MongoDB Atlas', err));
+if (!MONGOURL) {
+    console.error('MONGO_URI environment variable is not defined.');
+    process.exit(1);
+}
 
+mongoose.connect(MONGOURL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log('Connected to the Database successfully');
+        app.listen(PORT, () => {
+            console.log(`Server is listening on port: ${PORT}`);
+        });
+    })
+    .catch((error) => console.log(error));
 
 const productSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    description: String
+    id: Number,
+    image: String,
+    title: String,
+    price: Number
 });
 
 const Product = mongoose.model('Product', productSchema);
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the E-commerce Store');
+app.post('/add-to-cart', (req, res) => {
+    const product = req.body;
+    const newProduct = new Product(product);
+    newProduct.save()
+        .then(() => res.status(200).json({ message: 'Product added to cart successfully' }))
+        .catch((error) => {
+            console.error(error);
+            res.status(500).send('Error adding product to cart');
+        });
 });
-
-
-app.get('/products', async (req, res) => {
+app.get('/get-cart', async (req, res) => {
     try {
-        const products = await Product.find();
-        res.json(products);
+        const cartItems = await Product.find();
+        res.json(cartItems);
     } catch (error) {
-        res.status(500).send(error);
+        console.error('Error fetching cart items:', error);
+        res.status(500).send('Internal Server Error');
     }
-});
-
-
-app.post('/products', async (req, res) => {
-    try {
-        const newProduct = new Product(req.body);
-        await newProduct.save();
-        res.status(201).send(newProduct);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-});
-
-
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
 });

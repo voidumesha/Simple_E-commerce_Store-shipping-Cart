@@ -5,7 +5,6 @@
     <title>Cart</title>
 </head>
 <body>
-    
     <div class="container">
         <div id="root">
             <div class="cartBox">
@@ -15,17 +14,41 @@
                     <h3>Total</h3>
                     <h2 id="total">LKR 0.00</h2>
                 </div>
-                <div
-
             </div>
         </div>
+    </div>
 
-    </div>
-    
-    <div id="cart-items">
-        <!-- Cart items will be dynamically added here -->
-    </div>
-    
-    <script src="cart.js"></script>
+    <script>
+        async function fetchCartData() {
+            try {
+                const response = await fetch('/get-cart');
+                const cart = await response.json();
+                const cartItemElement = document.getElementById('cartItem');
+                const totalElement = document.getElementById('total');
+                let total = 0;
+
+                if (cart.length === 0) {
+                    cartItemElement.textContent = 'Still cart empty';
+                } else {
+                    cartItemElement.innerHTML = cart.map(product => {
+                        total += parseFloat(product.price);
+                        return `
+                            <div class="product">
+                                <img src="${product.image}" alt="${product.title}">
+                                <h2>${product.title}</h2>
+                                <p>${product.price} LKR</p>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                totalElement.textContent = `LKR ${total.toFixed(2)}`;
+            } catch (error) {
+                console.error('Error fetching cart data:', error);
+            }
+        }
+
+        window.onload = fetchCartData;
+    </script>
 </body>
 </html>

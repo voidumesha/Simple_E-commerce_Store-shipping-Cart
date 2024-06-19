@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>E-commerce Store</title>
-    <link rel="stylesheet" href="styles.css">
-    
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="cart.css" />
+  </head>
+  <body>
     <nav>
-        
-            
-            <ul >
-            
-                <li><a href="index.html">Home</a></li>
-                <li><a href="#Products">Products</a></li>
-                <li><a href="#About">About</a></li>
-                <li><a href="#Contact">Contact</a></li>
-                <li><a href="#sign">SignUp</a></li>
-                <li><a href="cart.html"><img id="cart-icon" src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" alt="cart-icon"></a></li>
-                
-        </ul>
-        
-        
-        
-       
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="#Products">Products</a></li>
+        <li><a href="#About">About</a></li>
+        <li><a href="#Contact">Contact</a></li>
+        <li><a href="#sign">SignUp</a></li>
+        <li><div class="cart"><a href="cart.html"><img id="cart-icon" src="image/cartIcon.png" alt="cart-icon"/></a></li>
+        <li><p id="count">0</p></div></li>
+      </ul>
     </nav>
+
+
+    
+      <div id="root">
+        <div class="cartBox">
+          <div class="head"><p>My cart</p></div>
+          <div id="cartItem">Still cart empty</div>
+          <div class="foot">
+            <h3>Total</h3>
+            <h2 id="total">LKR 0.00</h2>
+          </div>
+        </div>
+      </div>
     
     <script src="cart.js"></script>
-</body>
+  </body>
 </html>
