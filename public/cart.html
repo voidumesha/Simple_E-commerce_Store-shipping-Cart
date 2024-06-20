@@ -1,54 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <link rel="stylesheet" href="cart.css">
+  <head>
+    <link rel="stylesheet" href="cart.css" />
     <title>Cart</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div id="root">
-            <div class="cartBox">
-                <div class="head"><p>My cart</p></div>
-                <div id="cartItem">Still cart empty</div>
-                <div class="foot">
-                    <h3>Total</h3>
-                    <h2 id="total">LKR 0.00</h2>
-                </div>
-            </div>
+      <div id="root">
+        <div class="cartBox">
+          <div class="head"><p>My cart</p></div>
+          <div id="cartItem">Still cart empty</div>
+          <div class="foot">
+            <h3>Total</h3>
+            <h2 id="total">LKR 0.00</h2>
+          </div>
         </div>
+      </div>
     </div>
+    <div class="order"><button>Place order</button></div>
 
     <script>
-        async function fetchCartData() {
-            try {
-                const response = await fetch('/get-cart');
-                const cart = await response.json();
-                const cartItemElement = document.getElementById('cartItem');
-                const totalElement = document.getElementById('total');
-                let total = 0;
+      async function fetchCartData() {
+        try {
+          const response = await fetch("/get-cart");
+          const cart = await response.json();
+          const cartItemElement = document.getElementById("cartItem");
+          const totalElement = document.getElementById("total");
+          let total = 0;
 
-                if (cart.length === 0) {
-                    cartItemElement.textContent = 'Still cart empty';
-                } else {
-                    cartItemElement.innerHTML = cart.map(product => {
-                        total += parseFloat(product.price);
-                        return `
+          if (cart.length === 0) {
+            cartItemElement.textContent = "Still cart empty";
+          } else {
+            cartItemElement.innerHTML = cart
+              .map((product) => {
+                total += parseFloat(product.price);
+                return `
                             <div class="product">
                                 <img src="${product.image}" alt="${product.title}">
                                 <h2>${product.title}</h2>
                                 <p>${product.price} LKR</p>
                             </div>
                         `;
-                    }).join('');
-                }
+              })
+              .join("");
+          }
 
-                totalElement.textContent = `LKR ${total.toFixed(2)}`;
-            } catch (error) {
-                console.error('Error fetching cart data:', error);
-            }
+          totalElement.textContent = `LKR ${total.toFixed(2)}`;
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
         }
+      }
 
-        window.onload = fetchCartData;
+      window.onload = fetchCartData;
     </script>
-</body>
+  </body>
 </html>

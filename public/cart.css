@@ -173,3 +173,15 @@ button:hover{
     color: red;
 }
     
+
+.order{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px 0px;
+    padding: 10px;
+    border: 1px solid goldenrod;
+    border-radius: 5px;
+    width: 50%;
+}
