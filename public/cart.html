@@ -25,9 +25,12 @@
     <div id="popupModal" class="modal">
         <div class="modal-content">
           <span class="close-button" onclick="closePopup()">&times;</span>
-          <p>Your Order Is Processing Now</p>
+          <p>Your Order Is Processing Now!!</p>
           <p>Thank You For Shopping With Us</p>
-          <p>Total: LKR</p>
+          <div class="foot">
+            <h3>Total =</h3>
+            <h2 id="modalTotal">LKR 0.00</h2>
+          </div>
         </div>
       </div>
 
@@ -62,7 +65,7 @@
 
           totalElement.textContent = `LKR ${total.toFixed(2)}`;
 
-          // Add event listeners for incrementing and decrementing
+      
           document.querySelectorAll(".add-button").forEach((button) => {
             button.addEventListener("click", async (event) => {
               const productId = event.target.closest(".product").dataset.id;
