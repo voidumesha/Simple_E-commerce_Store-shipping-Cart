@@ -5,19 +5,26 @@
     <title>Cart</title>
   </head>
   <body>
-    <div class="container">
-      <div id="root">
-        <div class="cartBox">
-          <div class="head"><p>My cart</p></div>
-          <div id="cartItem">Still cart empty</div>
-          <div class="foot">
-            <h3>Total</h3>
-            <h2 id="total">LKR 0.00</h2>
+
+        <div class="container">
+            <div id="root">
+              <div class="cartBox">
+                <div class="head"><p>My cart</p></div>
+                <div id="cartItem">Still cart empty</div>
+              </div>
+            </div>
+         
+          <div class="placeOderSection">
+            <div class="foot">
+              <h3>Total = </h3>
+              <h2 id="total">  LKR 0.00</h2>
+            </div>
+            <div><button class="orButton">Place order</button></div>
           </div>
         </div>
-      </div>
-    </div>
-    <div class="order"><button>Place order</button></div>
+
+
+    
 
     <script>
       async function fetchCartData() {

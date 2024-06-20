@@ -17,7 +17,7 @@
 .cartBox{
     
     padding: 15px;
-    width: 300%;
+    width: 200%;
     text-align: center;
     margin-left: 20px;
     background-color: #eee;
@@ -156,13 +156,7 @@ button:hover{
 
 }
 
-.foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 10px;
-    border-top: 1px solid #ddd;
-}
+
 
 .foot h3 {
     margin: 0;
@@ -174,14 +168,35 @@ button:hover{
 }
     
 
-.order{
+
+
+.orButton{
+    width: 100%;
+    position: relative;
+    border: none;
+    border-radius: 5px;
+    background-color: rgb(118, 17, 143);
+    cursor: pointer;
+    color: white;
+    margin: 20px 0px;
+}
+.orButton:hover{
+    background-color: #da981e;
+}
+
+.placeOderSection{
+
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items:center;
     justify-content: center;
-    margin: 20px 0px;
-    padding: 10px;
+    margin: 20px;
+    padding: 0px;
     border: 1px solid goldenrod;
     border-radius: 5px;
-    width: 50%;
+    width: 30%;
+    margin: auto;
+  
+   
+    
 }
