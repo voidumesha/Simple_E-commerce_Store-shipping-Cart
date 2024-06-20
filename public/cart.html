@@ -1,30 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <link rel="stylesheet" href="cart.css" />
     <title>Cart</title>
   </head>
   <body>
-
-        <div class="container">
-            <div id="root">
-              <div class="cartBox">
-                <div class="head"><p>My cart</p></div>
-                <div id="cartItem">Still cart empty</div>
-              </div>
-            </div>
-         
-          <div class="placeOderSection">
-            <div class="foot">
-              <h3>Total = </h3>
-              <h2 id="total">  LKR 0.00</h2>
-            </div>
-            <div><button class="orButton">Place order</button></div>
-          </div>
+    <div class="container">
+      <div id="root">
+        <div class="cartBox">
+          <div class="head"><p>My cart</p></div>
+          <div id="cartItem" class="empty">Still cart empty</div>
         </div>
+      </div>
 
-
-    
+      <div class="placeOrderSection">
+        <div class="foot">
+          <h3>Total =</h3>
+          <h2 id="total">LKR 0.00</h2>
+        </div>
+        <div><button class="orButton" onclick="showPopup()">Place order</button></div>
+      </div>
+    </div>
+    <div id="popupModal" class="modal">
+        <div class="modal-content">
+          <span class="close-button" onclick="closePopup()">&times;</span>
+          <p>Your Order Is Processing Now</p>
+          <p>Thank You For Shopping With Us</p>
+          <p>Total: LKR</p>
+        </div>
+      </div>
 
     <script>
       async function fetchCartData() {
@@ -40,25 +45,93 @@
           } else {
             cartItemElement.innerHTML = cart
               .map((product) => {
-                total += parseFloat(product.price);
+                total += parseFloat(product.price) * product.count;
                 return `
-                            <div class="product">
-                                <img src="${product.image}" alt="${product.title}">
-                                <h2>${product.title}</h2>
-                                <p>${product.price} LKR</p>
-                            </div>
-                        `;
+                   <div class="product" data-id="${product.id}">
+                    <img src="${product.image}" alt="${product.title}">
+                    <h2>${product.title}</h2>
+                    <p>${product.price} LKR x ${product.count}</p>
+                    <img src="image/delete.png" alt="Delete" class="cart-icon delete-button" style="width: 20px; height: 20px;">
+                    <p class="count">${product.count}</p>
+                    <img src="image/add.png" alt="Add" class="cart-icon add-button" style="width: 20px; height: 20px;">
+                    </div>
+                `;
               })
               .join("");
           }
 
           totalElement.textContent = `LKR ${total.toFixed(2)}`;
+
+          // Add event listeners for incrementing and decrementing
+          document.querySelectorAll(".add-button").forEach((button) => {
+            button.addEventListener("click", async (event) => {
+              const productId = event.target.closest(".product").dataset.id;
+              await incrementItem(productId);
+            });
+          });
+
+          document.querySelectorAll(".delete-button").forEach((button) => {
+            button.addEventListener("click", async (event) => {
+              const productId = event.target.closest(".product").dataset.id;
+              await decrementItem(productId);
+            });
+          });
         } catch (error) {
           console.error("Error fetching cart data:", error);
         }
       }
 
+      async function incrementItem(productId) {
+        try {
+          const response = await fetch(`/increment-item/${productId}`, {
+            method: "PUT",
+          });
+          const updatedProduct = await response.json();
+          updateCartItem(updatedProduct, true);
+        } catch (error) {
+          console.error("Error incrementing item:", error);
+        }
+      }
+
+      async function decrementItem(productId) {
+        try {
+          const response = await fetch(`/decrement-item/${productId}`, {
+            method: "PUT",
+          });
+          const updatedProduct = await response.json();
+          updateCartItem(updatedProduct, false);
+        } catch (error) {
+          console.error("Error decrementing item:", error);
+        }
+      }
+
+      function updateCartItem(updatedProduct, isIncrement) {
+        const productElement = document.querySelector(
+          `.product[data-id="${updatedProduct.id}"]`
+        );
+        const countElement = productElement.querySelector(".count");
+        const priceElement = productElement.querySelector("p");
+        const totalElement = document.getElementById("total");
+        let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
+
+        countElement.textContent = updatedProduct.count;
+        priceElement.textContent = `${updatedProduct.price}LKR x ${updatedProduct.count}`;
+
+        if (isIncrement) {
+          total += parseFloat(updatedProduct.price);
+        } else {
+          total -= parseFloat(updatedProduct.price);
+        }
+
+        totalElement.textContent = `LKR ${total.toFixed(2)}`;
+
+        if (updatedProduct.count <= 0) {
+          productElement.remove();
+        }
+      }
+
       window.onload = fetchCartData;
     </script>
+    <script src="msg.js"></script>
   </body>
 </html>

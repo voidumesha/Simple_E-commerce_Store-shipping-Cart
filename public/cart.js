@@ -120,3 +120,4 @@ function displaycart() {
     document.getElementById("total").innerHTML = `LKR ${total}.00`;
   }
 }
+
