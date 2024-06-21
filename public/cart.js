@@ -73,6 +73,7 @@ var cart = [];
 
 
 function addtocart(item) {
+    alert("Item added to cart");
   fetch('/add-to-cart', {
     method: 'POST',
     headers: {
