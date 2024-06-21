@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-
     <link rel="stylesheet" href="cart.css" />
     <title>Cart</title>
   </head>
   <body>
     <div class="container">
       <div id="root">
+        
+
         <div class="cartBox">
           <div class="head"><p>My cart</p></div>
           <div id="cartItem" class="empty">Still cart empty</div>
@@ -19,20 +20,22 @@
           <h3>Total =</h3>
           <h2 id="total">LKR 0.00</h2>
         </div>
-        <div><button class="orButton" onclick="showPopup()">Place order</button></div>
+        <div>
+          <button class="orButton" onclick="showPopup()">Place order</button>
+        </div>
       </div>
     </div>
     <div id="popupModal" class="modal">
-        <div class="modal-content">
-          <span class="close-button" onclick="closePopup()">&times;</span>
-          <p>Your Order Is Processing Now!!</p>
-          <p>Thank You For Shopping With Us</p>
-          <div class="foot">
-            <h3>Total =</h3>
-            <h2 id="modalTotal">LKR 0.00</h2>
-          </div>
+      <div class="modal-content">
+        <span class="close-button" onclick="closePopup()">&times;</span>
+        <p>Your Order Is Processing Now!!</p>
+        <p>Thank You For Shopping With Us</p>
+        <div class="foot">
+          <h3>Total =</h3>
+          <h2 id="modalTotal">LKR 0.00</h2>
         </div>
       </div>
+    </div>
 
     <script>
       async function fetchCartData() {
@@ -65,7 +68,6 @@
 
           totalElement.textContent = `LKR ${total.toFixed(2)}`;
 
-      
           document.querySelectorAll(".add-button").forEach((button) => {
             button.addEventListener("click", async (event) => {
               const productId = event.target.closest(".product").dataset.id;
@@ -135,6 +137,7 @@
 
       window.onload = fetchCartData;
     </script>
+    
     <script src="msg.js"></script>
   </body>
 </html>

@@ -71,6 +71,7 @@ document.getElementById("root").innerHTML = product
 
 var cart = [];
 
+
 function addtocart(item) {
   fetch('/add-to-cart', {
     method: 'POST',
@@ -120,4 +121,5 @@ function displaycart() {
     document.getElementById("total").innerHTML = `LKR ${total}.00`;
   }
 }
+
 
