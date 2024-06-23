@@ -1,8 +1,9 @@
 .container {                        /* This is whole cart body devide 2 */
     display: flex;
-    width: 80%;
+    width: 70%;
     margin-bottom: 30px;
     margin: auto;
+    align-items: center;
   }
   
   #root {
@@ -21,11 +22,18 @@
     margin-left: 20px;
     background-color: #eee;
     border-radius: 5px;
-    min-height: 200px;
+    min-height: 400px;
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+  
+  .cartBox.empty {
+    min-width: 600px;
+    
+  }
+  
   
   .head {
     background-color: goldenrod;
@@ -209,7 +217,7 @@
     border-radius: 10px;
     border: 1px solid rgb(223, 164, 39);
     padding: 30px;
-    height: 300px;
+    
   }
 
   .cart-icon {

@@ -35,77 +35,114 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema);
 
+const orderSchema = new mongoose.Schema({
+    items: [{
+        id: Number,
+        title: String,
+        price: Number,
+        count: Number,
+    }],
+    total: Number,
+    date: { type: Date, default: Date.now }
+});
+
+const Order = mongoose.model('Order', orderSchema);
+
 app.post('/add-to-cart', async (req, res) => {
     const product = req.body;
-  
-    try {
-      let cartItem = await Product.findOne({ id: product.id });
-  
-      if (cartItem) {
-        cartItem.count += 1;
-        await cartItem.save();
-      } else {
-        cartItem = new Product(product);
-        await cartItem.save();
-      }
-  
-      res.status(200).send('Product added to cart successfully');
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error adding product to cart');
-    }
-  });
 
+    try {
+        let cartItem = await Product.findOne({ id: product.id });
+
+        if (cartItem) {
+            cartItem.count += 1;
+            await cartItem.save();
+        } else {
+            cartItem = new Product(product);
+            await cartItem.save();
+        }
+
+        res.status(200).send('Product added to cart successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error adding product to cart');
+    }
+});
 
 app.put('/increment-item/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const cartItem = await Product.findOneAndUpdate(
-      { id: parseInt(id) },
-      { $inc: { count: 1 } },
-      { new: true }
-    );
-
-    if (cartItem) {
-      res.status(200).send(cartItem);
-    } else {
-      res.status(404).send('Item not found');
+    try {
+        const { id } = req.params;
+        const cartItem = await Product.findOneAndUpdate(
+            { id: parseInt(id) },
+            { $inc: { count: 1 } },
+            { new: true }
+        );
+        if (cartItem) {
+            res.status(200).json(cartItem);
+        } else {
+            res.status(404).send('Item not found');
+        }
+    } catch (error) {
+        console.error('Error incrementing item:', error);
+        res.status(500).send('Error incrementing item');
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error incrementing item');
-  }
 });
-  
+
 app.put('/decrement-item/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const cartItem = await Product.findOneAndUpdate(
-        { id: parseInt(id) },
-        { $inc: { count: -1 } },
-        { new: true }
-      );
+      const cartItem = await Product.findOne({ id: parseInt(id) });
   
       if (cartItem) {
-        if (cartItem.count <= 0) {
-          await Product.findOneAndDelete({ id: parseInt(id) });
+        if (cartItem.count > 1) {
+          cartItem.count -= 1;
+          await cartItem.save();
+          res.status(200).json(cartItem);
+        } else {
+          await cartItem.remove();
+          res.status(200).json(cartItem);
         }
-        res.status(200).send(cartItem);
       } else {
         res.status(404).send('Item not found');
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error decrementing item:', error);
       res.status(500).send('Error decrementing item');
     }
   });
   
+
 app.get('/get-cart', async (req, res) => {
     try {
         const cartItems = await Product.find();
-        res.json(cartItems);
+        res.status(200).json(cartItems);
     } catch (error) {
         console.error('Error fetching cart items:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Error fetching cart items');
+    }
+});
+
+app.post('/place-order', async (req, res) => {
+    const { items, total } = req.body;
+
+    if (!items || !total) {
+        return res.status(400).send('Invalid order data');
+    }
+
+    const order = new Order({
+        items,
+        total,
+    });
+
+    try {
+        await order.save();
+
+       
+        await Product.deleteMany({});
+
+        res.status(201).send('Order placed successfully');
+    } catch (error) {
+        console.error('Error placing order:', error);
+        res.status(500).send('Error placing order');
     }
 });

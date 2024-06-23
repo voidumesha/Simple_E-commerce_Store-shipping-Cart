@@ -7,8 +7,6 @@
   <body>
     <div class="container">
       <div id="root">
-        
-
         <div class="cartBox">
           <div class="head"><p>My cart</p></div>
           <div id="cartItem" class="empty">Still cart empty</div>
@@ -21,7 +19,13 @@
           <h2 id="total">LKR 0.00</h2>
         </div>
         <div>
-          <button class="orButton" onclick="showPopup()" id="place">Place order</button>
+          <button
+            class="orButton"
+            onclick="showPopup();placeOrder()"
+            id="placeOrderButton"
+          >
+            Place order
+          </button>
         </div>
       </div>
     </div>
@@ -111,33 +115,102 @@
       }
 
       function updateCartItem(updatedProduct, isIncrement) {
-        const productElement = document.querySelector(
-          `.product[data-id="${updatedProduct.id}"]`
+  const productElement = document.querySelector(
+    `.product[data-id="${updatedProduct.id}"]`
+  );
+  const countElement = productElement.querySelector(".count");
+  const priceElement = productElement.querySelector("p");
+  const totalElement = document.getElementById("total");
+  let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
+
+  countElement.textContent = updatedProduct.count;
+  priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
+
+  if (isIncrement) {
+    total += parseFloat(updatedProduct.price);
+  } else {
+    total -= parseFloat(updatedProduct.price);
+  }
+
+  totalElement.textContent = `LKR ${total.toFixed(2)}`;
+
+
+  if (updatedProduct.count <= 0) {
+    productElement.remove(); 
+    removeFromCart(updatedProduct.id); 
+  }
+}
+
+function removeFromCart(productId) {
+  cart = cart.filter(item => item.id !== productId);
+  displaycart();
+}
+
+      async function placeOrder() {
+        const cartItems = document.querySelectorAll(".product");
+        if (cartItems.length === 0) {
+          alert("Your cart is empty.");
+          return;
+        }
+
+        const orderDetails = Array.from(cartItems).map((item) => {
+          return {
+            id: item.dataset.id,
+            title: item.querySelector("h2").textContent,
+            price: parseFloat(
+              item.querySelector("p").textContent.split(" ")[0]
+            ),
+            count: parseInt(item.querySelector(".count").textContent),
+          };
+        });
+
+        const total = parseFloat(
+          document.getElementById("total").textContent.replace("LKR ", "")
         );
-        const countElement = productElement.querySelector(".count");
-        const priceElement = productElement.querySelector("p");
-        const totalElement = document.getElementById("total");
-        let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
 
-        countElement.textContent = updatedProduct.count;
-        priceElement.textContent = `${updatedProduct.price}LKR x ${updatedProduct.count}`;
+        const orderData = {
 
-        if (isIncrement) {
-          total += parseFloat(updatedProduct.price);
-        } else {
-          total -= parseFloat(updatedProduct.price);
+          items: orderDetails,
+          total: total,
+        };
+
+        try {
+          const response = await fetch("/place-order", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderData),
+          });
+
+          if (response.ok) {
+            console.log("Order placed successfully");
+            alert("Order placed successfully!");
+            document.getElementById("cartItem").innerHTML = "Still cart empty";
+            document.getElementById("total").textContent = "LKR 0.00";
+            closePopup();
+          } else {
+            console.error("Error placing order:", response.statusText);
+            alert("Failed to place order.");
+          }
+        } catch (error) {
+          console.error("Error placing order:", error);
+          alert("Failed to place order.");
         }
+      }
+      function showPopup() {
+        document.getElementById("popupModal").style.display = "block";
+        document.getElementById("modalTotal").textContent =
+          document.getElementById("total").textContent;
+      }
 
-        totalElement.textContent = `LKR ${total.toFixed(2)}`;
-
-        if (updatedProduct.count <= 0) {
-          productElement.remove();
-        }
+      function closePopup() {
+        document.getElementById("popupModal").style.display = "none";
       }
 
       window.onload = fetchCartData;
     </script>
-    
+
     <script src="msg.js"></script>
   </body>
 </html>
