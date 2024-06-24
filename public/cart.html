@@ -115,9 +115,7 @@
       }
 
       function updateCartItem(updatedProduct, isIncrement) {
-  const productElement = document.querySelector(
-    `.product[data-id="${updatedProduct.id}"]`
-  );
+  const productElement = document.querySelector(`.product[data-id="${updatedProduct.id}"]`);
   const countElement = productElement.querySelector(".count");
   const priceElement = productElement.querySelector("p");
   const totalElement = document.getElementById("total");
@@ -125,6 +123,11 @@
 
   countElement.textContent = updatedProduct.count;
   priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
+
+  if (updatedProduct.count <= 0) {
+    productElement.remove(); // Remove the product from the cart view
+    removeFromCart(updatedProduct.id); // Remove the product from the cart array
+  }
 
   if (isIncrement) {
     total += parseFloat(updatedProduct.price);
@@ -134,17 +137,27 @@
 
   totalElement.textContent = `LKR ${total.toFixed(2)}`;
 
-
-  if (updatedProduct.count <= 0) {
-    productElement.remove(); 
-    removeFromCart(updatedProduct.id); 
+  // Update the cart message if empty
+  if (total <= 0) {
+    document.getElementById("cartItem").textContent = "Still cart empty";
   }
 }
 
 function removeFromCart(productId) {
+  // Assuming `cart` is a global array holding the cart items
   cart = cart.filter(item => item.id !== productId);
-  displaycart();
+  // Optionally, update the cart display after removing from the array
+  displayCart();
 }
+
+
+function removeFromCart(productId) {
+
+  cart = cart.filter(item => item.id !== productId);
+  displayCart(); 
+}
+
+
 
       async function placeOrder() {
         const cartItems = document.querySelectorAll(".product");
@@ -169,7 +182,6 @@ function removeFromCart(productId) {
         );
 
         const orderData = {
-
           items: orderDetails,
           total: total,
         };
@@ -198,6 +210,7 @@ function removeFromCart(productId) {
           alert("Failed to place order.");
         }
       }
+
       function showPopup() {
         document.getElementById("popupModal").style.display = "block";
         document.getElementById("modalTotal").textContent =

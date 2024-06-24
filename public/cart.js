@@ -48,80 +48,85 @@ const product = [
       price: 200,
     },
     {
-        id: 8,
-        image: "image/b9.png",
-        title: "pen",
-        price: 240,
-      },
-      {
-        id: 9,
-        image: "image/b10.png",
-        title: "memoryCard",
-        price: 1200,
-      },
-      {
-        id: 10,
-        image: "image/b11.png",
-        title: "charger",
-        price: 800,
-      },
-      {
-        id: 11,
-        image: "image/b12.png",
-        title: "phone",
-        price: 1660,
-      },
-  ];
-  const categories = [...new Set(product.map((item) => item))];
-let i = 0;
-
-document.getElementById("root").innerHTML = product
-  .map((item) => {
-    const { image, title, price } = item;
-    return (
-      `<div class='box'>
-        <div class='img-box'>
-          <img class='images' src=${image}></img>
-        </div>
-        <div class='bottom'>
-          <p>${title}</p>
-          <h2>LKR ${price}.00</h2>` +
-      `<button onclick='addtocart(${JSON.stringify(item)})'>Add to cart</button>` +
-      
-      `</div>
-      </div>`
-    );
-  })
-  .join("");
-
-var cart = [];
-
-
-function addtocart(item) {
-
-  fetch('/add-to-cart', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+      id: 8,
+      image: "image/b9.png",
+      title: "pen",
+      price: 240,
     },
-    body: JSON.stringify(item),
-  })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      cart.push(item);
-      displaycart();
-      
+    {
+      id: 9,
+      image: "image/b10.png",
+      title: "memoryCard",
+      price: 1200,
+    },
+    {
+      id: 10,
+      image: "image/b11.png",
+      title: "charger",
+      price: 800,
+    },
+    {
+      id: 11,
+      image: "image/b12.png",
+      title: "phone",
+      price: 1660,
+    },
+  ];
+  
+  const categories = [...new Set(product.map((item) => item))];
+  let i = 0;
+  
+  document.getElementById("root").innerHTML = product
+    .map((item) => {
+      const { image, title, price } = item;
+      return (
+        `<div class='box'>
+          <div class='img-box'>
+            <img class='images' src=${image}></img>
+          </div>
+          <div class='bottom'>
+            <p>${title}</p>
+            <h2>LKR ${price}.00</h2>` +
+        `<button onclick='addtocart(${JSON.stringify(item)})'>Add to cart</button>` +
+        `</div>
+        </div>`
+      );
     })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
-
-
-function delElement(index) {
-    cart.splice(index, 1); 
-    displaycart(); 
+    .join("");
+  
+  var cart = [];
+  
+  function showSuccessMessage() {
+    const successMessage = document.getElementById("success-message");
+    successMessage.innerHTML = "added successfully!";
+    successMessage.style.display = "block";
+    setTimeout(() => {
+      successMessage.style.display = "none";
+    }, 3000);
+  }
+  
+  function addtocart(item) {
+    fetch('/add-to-cart', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(item),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Success:', data);
+        cart.push(item);
+        displaycart();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+  
+  function delElement(index) {
+    cart.splice(index, 1);
+    displaycart();
   }
   
   function displaycart() {
@@ -157,9 +162,7 @@ function delElement(index) {
     }
   }
   
-
-
-function placeOrder() {
+  function placeOrder() {
     if (cart.length === 0) {
       alert("Your cart is empty.");
       return;
@@ -195,3 +198,4 @@ function placeOrder() {
         alert("Failed to place order.");
       });
   }
+  
