@@ -1,6 +1,6 @@
 .container {                        /* This is whole cart body devide 2 */
     display: flex;
-    width: 70%;
+    width: 80%;
     margin-bottom: 30px;
     margin: auto;
     align-items: center;

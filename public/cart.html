@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="cart.css" />
-    <title>Cart</title>
+    <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-commerce Store</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="cart.css">
   </head>
   <body>
+ 
     <div class="container">
       <div id="root">
         <div class="cartBox">
@@ -125,8 +129,8 @@
   priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
 
   if (updatedProduct.count <= 0) {
-    productElement.remove(); // Remove the product from the cart view
-    removeFromCart(updatedProduct.id); // Remove the product from the cart array
+    productElement.remove();
+    removeFromCart(updatedProduct.id); 
   }
 
   if (isIncrement) {
@@ -137,16 +141,16 @@
 
   totalElement.textContent = `LKR ${total.toFixed(2)}`;
 
-  // Update the cart message if empty
+ 
   if (total <= 0) {
     document.getElementById("cartItem").textContent = "Still cart empty";
   }
 }
 
 function removeFromCart(productId) {
-  // Assuming `cart` is a global array holding the cart items
+
   cart = cart.filter(item => item.id !== productId);
-  // Optionally, update the cart display after removing from the array
+
   displayCart();
 }
 
