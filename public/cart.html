@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-commerce Store</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="cart.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-commerce Store</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="cart.css" />
   </head>
   <body>
- 
     <div class="container">
       <div id="root">
         <div class="cartBox">
@@ -108,6 +107,7 @@
 
       async function decrementItem(productId) {
         try {
+          a;
           const response = await fetch(`/decrement-item/${productId}`, {
             method: "PUT",
           });
@@ -119,49 +119,45 @@
       }
 
       function updateCartItem(updatedProduct, isIncrement) {
-  const productElement = document.querySelector(`.product[data-id="${updatedProduct.id}"]`);
-  const countElement = productElement.querySelector(".count");
-  const priceElement = productElement.querySelector("p");
-  const totalElement = document.getElementById("total");
-  let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
+        const productElement = document.querySelector(
+          `.product[data-id="${updatedProduct.id}"]`
+        );
+        const countElement = productElement.querySelector(".count");
+        const priceElement = productElement.querySelector("p");
+        const totalElement = document.getElementById("total");
+        let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
 
-  countElement.textContent = updatedProduct.count;
-  priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
+        countElement.textContent = updatedProduct.count;
+        priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
 
-  if (updatedProduct.count <= 0) {
-    productElement.remove();
-    removeFromCart(updatedProduct.id); 
-  }
+        if (updatedProduct.count <= 0) {
+          productElement.remove();
+          removeFromCart(updatedProduct.id);
+        }
 
-  if (isIncrement) {
-    total += parseFloat(updatedProduct.price);
-  } else {
-    total -= parseFloat(updatedProduct.price);
-  }
+        if (isIncrement) {
+          total += parseFloat(updatedProduct.price);
+        } else {
+          total -= parseFloat(updatedProduct.price);
+        }
 
-  totalElement.textContent = `LKR ${total.toFixed(2)}`;
+        totalElement.textContent = `LKR ${total.toFixed(2)}`;
 
- 
-  if (total <= 0) {
-    document.getElementById("cartItem").textContent = "Still cart empty";
-  }
-}
+        if (total <= 0) {
+          document.getElementById("cartItem").textContent = "Still cart empty";
+        }
+      }
 
-function removeFromCart(productId) {
+      function removeFromCart(productId) {
+        cart = cart.filter((item) => item.id !== productId);
 
-  cart = cart.filter(item => item.id !== productId);
+        displayCart();
+      }
 
-  displayCart();
-}
-
-
-function removeFromCart(productId) {
-
-  cart = cart.filter(item => item.id !== productId);
-  displayCart(); 
-}
-
-
+      function removeFromCart(productId) {
+        cart = cart.filter((item) => item.id !== productId);
+        displayCart();
+      }
 
       async function placeOrder() {
         const cartItems = document.querySelectorAll(".product");

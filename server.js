@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 dotenv.config();
 
@@ -8,7 +9,10 @@ const app = express();
 app.use(express.json());
 app.use(express.static('public'));
 
-const PORT = process.env.PORT || 8000;
+
+app.use(cors());
+
+const PORT = process.env.PORT;
 const MONGOURL = process.env.MONGO_URI;
 
 if (!MONGOURL) {
@@ -16,7 +20,7 @@ if (!MONGOURL) {
     process.exit(1);
 }
 
-mongoose.connect(MONGOURL, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGOURL)
     .then(() => {
         console.log('Connected to the Database successfully');
         app.listen(PORT, () => {
@@ -92,7 +96,7 @@ app.put('/decrement-item/:id', async (req, res) => {
     try {
       const { id } = req.params;
       const cartItem = await Product.findOne({ id: parseInt(id) });
-  
+
       if (cartItem) {
         if (cartItem.count > 1) {
           cartItem.count -= 1;
@@ -110,7 +114,6 @@ app.put('/decrement-item/:id', async (req, res) => {
       res.status(500).send('Error decrementing item');
     }
   });
-  
 
 app.get('/get-cart', async (req, res) => {
     try {
@@ -137,7 +140,6 @@ app.post('/place-order', async (req, res) => {
     try {
         await order.save();
 
-       
         await Product.deleteMany({});
 
         res.status(201).send('Order placed successfully');

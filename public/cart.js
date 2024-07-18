@@ -106,22 +106,25 @@ const product = [
   }
   
   function addtocart(item) {
-    fetch('/add-to-cart', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    fetch('http://127.0.0.1:3000/add-to-cart', { 
+      
+      method: 'POST', 
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(item),
     })
-      .then(response => response.json())
-      .then(data => {
-        console.log('Success:', data);
-        cart.push(item);
-        displaycart();
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok, status: ${response.status}`);
+      }
+      return response.json(); 
+    })
+    .then(data => {
+      console.log('Success:', data);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+    
   }
   
   function delElement(index) {
