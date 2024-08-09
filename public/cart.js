@@ -150,7 +150,7 @@ const product = [
           return `
             <div class='cart-item'>
               <div class='row-img'>
-                <img class='rowimg' src=${image}>
+                <img class='rowimg' src=${image}> 
               </div>
               <p style='font-size:12px;'>${title}</p>
               <h2 style='font-size: 15px;'>LKR ${price}.00</h2>

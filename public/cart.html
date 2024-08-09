@@ -107,14 +107,48 @@
 
       async function decrementItem(productId) {
         try {
-          a;
           const response = await fetch(`/decrement-item/${productId}`, {
             method: "PUT",
           });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("Error decrementing item:", errorText);
+            return;
+          }
+
           const updatedProduct = await response.json();
-          updateCartItem(updatedProduct, false);
+
+          if (updatedProduct.count === undefined) {
+            // This means the item was removed from the cart
+            removeItemFromCart(productId);
+          } else {
+            updateCartItem(updatedProduct, false);
+          }
         } catch (error) {
           console.error("Error decrementing item:", error);
+        }
+      }
+
+      function removeItemFromCart(productId) {
+        const productElement = document.querySelector(
+          `.product[data-id="${productId}"]`
+        );
+        if (productElement) {
+          productElement.remove();
+        }
+
+        const totalElement = document.getElementById("total");
+        let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
+        const itemPrice = parseFloat(
+          productElement.querySelector("p").textContent.split(" ")[0]
+        );
+        total -= itemPrice;
+
+        totalElement.textContent = `LKR ${total.toFixed(2)}`;
+
+        if (total <= 0) {
+          document.getElementById("cartItem").textContent = "Still cart empty";
         }
       }
 
@@ -127,12 +161,12 @@
         const totalElement = document.getElementById("total");
         let total = parseFloat(totalElement.textContent.replace("LKR ", ""));
 
-        countElement.textContent = updatedProduct.count;
-        priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
-
+        // If the product count is 0, remove the product element from the cart
         if (updatedProduct.count <= 0) {
           productElement.remove();
-          removeFromCart(updatedProduct.id);
+        } else {
+          countElement.textContent = updatedProduct.count;
+          priceElement.textContent = `${updatedProduct.price} LKR x ${updatedProduct.count}`;
         }
 
         if (isIncrement) {
@@ -146,17 +180,6 @@
         if (total <= 0) {
           document.getElementById("cartItem").textContent = "Still cart empty";
         }
-      }
-
-      function removeFromCart(productId) {
-        cart = cart.filter((item) => item.id !== productId);
-
-        displayCart();
-      }
-
-      function removeFromCart(productId) {
-        cart = cart.filter((item) => item.id !== productId);
-        displayCart();
       }
 
       async function placeOrder() {
